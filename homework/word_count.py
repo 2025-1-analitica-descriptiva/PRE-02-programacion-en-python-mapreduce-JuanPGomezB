@@ -145,7 +145,6 @@ def create_ouptput_directory(output_directory):
             os.remove(file)
         os.rmdir(output_directory)
     os.makedirs(output_directory)
-    return result
 
 
 #
@@ -158,6 +157,9 @@ def create_ouptput_directory(output_directory):
 #
 def save_output(output_directory, sequence):
     """Save Output"""
+    with open(f"{output_directory}/part-00000", "w", encoding="utf-8") as f:
+        for key, value in sequence:
+            f.write(f"{key}\t{value}\n")
 
 
 #
@@ -166,6 +168,8 @@ def save_output(output_directory, sequence):
 #
 def create_marker(output_directory):
     """Create Marker"""
+    with open(f"{output_directory}/_SUCCESS", "w", encoding="utf-8") as f:
+        f.write("")
 
 
 #
@@ -174,16 +178,24 @@ def create_marker(output_directory):
 def run_job(input_directory, output_directory):
     """Job"""
 
+    # sequence = load_input(input_directory)
+    # print("load_input\n",sequence[:12])
+    # sequence = line_preprocessing(sequence)
+    # print("line_preprocessing\n", sequence[:12])
+    # sequence = mapper(sequence)
+    # print("mapper\n",sequence[:12])
+    # sequence = shuffle_and_sort(sequence)
+    # print("shuffle_and_sort\n",sequence[:12])
+    # sequence = reducer(sequence)
+    # print("reducer\n",sequence[-12:-1])
     sequence = load_input(input_directory)
-    print("load_input\n",sequence[:12])
     sequence = line_preprocessing(sequence)
-    print("line_preprocessing\n", sequence[:12])
     sequence = mapper(sequence)
-    print("mapper\n",sequence[:12])
     sequence = shuffle_and_sort(sequence)
-    print("shuffle_and_sort\n",sequence[:12])
     sequence = reducer(sequence)
-    print("reducer\n",sequence[-12:-1])
+    create_ouptput_directory(output_directory)
+    save_output(output_directory, sequence)
+    create_marker(output_directory)
 
 if __name__ == "__main__":
 
